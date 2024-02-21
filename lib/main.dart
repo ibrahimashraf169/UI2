@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp(
           theme: theme,
-          title: 'ibrahim_s_application1',
+          title: 'Tombile',
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.signUpScreen,
           routes: AppRoutes.routes,

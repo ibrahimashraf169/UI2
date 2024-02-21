@@ -1,18 +1,38 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:ibrahim_s_application1/core/app_export.dart';
 import 'package:ibrahim_s_application1/widgets/custom_elevated_button.dart';
 import 'package:ibrahim_s_application1/widgets/custom_floating_text_field.dart';
 
+import '../../model/signup.dart';
+
 // ignore_for_file: must_be_immutable
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+
   SignUpScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  List<User> users=[];
+
   TextEditingController nameController = TextEditingController();
+
   TextEditingController userNameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController confirmpasswordController = TextEditingController();
+
   TextEditingController phoneNumberController = TextEditingController();
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -37,7 +57,7 @@ class SignUpScreen extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildName(context),
+                        //_buildName(context),
                         SizedBox(height: 4.v),
                         _buildUserName(context),
                         SizedBox(height: 4.v),
@@ -45,9 +65,9 @@ class SignUpScreen extends StatelessWidget {
                         SizedBox(height: 4.v),
                         _buildPassword(context),
                         SizedBox(height: 4.v),
-                        _buildConfirmpassword(context),
+                        //_buildConfirmpassword(context),
                         SizedBox(height: 4.v),
-                        _buildPhoneNumber(context),
+                        //_buildPhoneNumber(context),
                         SizedBox(height: 20.v),
                         _buildSignUp(context),
 
@@ -93,20 +113,20 @@ class SignUpScreen extends StatelessWidget {
       ),
     );
   }
-  Widget _buildName(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: CustomFloatingTextField(
-        width: 348.h,
-        controller: nameController,
-        labelText: "Name",
-        labelStyle: theme.textTheme.titleMedium!,
-        hintText: "Name",
-        alignment: Alignment.bottomLeft,
-        contentPadding: EdgeInsets.symmetric(vertical: 14.v, horizontal: 18.h),
-      ),
-    );
-  }
+  // Widget _buildName(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 8.0),
+  //     child: CustomFloatingTextField(
+  //       width: 348.h,
+  //       controller: nameController,
+  //       labelText: "Name",
+  //       labelStyle: theme.textTheme.titleMedium!,
+  //       hintText: "Name",
+  //       alignment: Alignment.bottomLeft,
+  //       contentPadding: EdgeInsets.symmetric(vertical: 14.v, horizontal: 18.h),
+  //     ),
+  //   );
+  // }
 
   Widget _buildUserName(BuildContext context) {
     return Padding(
@@ -156,39 +176,39 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildConfirmpassword(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: CustomFloatingTextField(
-        width: 348.h,
-        controller: confirmpasswordController,
-        labelText: "Confirm Password",
-        labelStyle: theme.textTheme.titleMedium!,
-        hintText: "Confirm Password",
-        textInputType: TextInputType.visiblePassword,
-        obscureText: true,
-        alignment: Alignment.bottomLeft,
-        contentPadding: EdgeInsets.symmetric(vertical: 14.v, horizontal: 18.h),
-      ),
-    );
-  }
+  // Widget _buildConfirmpassword(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 8.0),
+  //     child: CustomFloatingTextField(
+  //       width: 348.h,
+  //       controller: confirmpasswordController,
+  //       labelText: "Confirm Password",
+  //       labelStyle: theme.textTheme.titleMedium!,
+  //       hintText: "Confirm Password",
+  //       textInputType: TextInputType.visiblePassword,
+  //       obscureText: true,
+  //       alignment: Alignment.bottomLeft,
+  //       contentPadding: EdgeInsets.symmetric(vertical: 14.v, horizontal: 18.h),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildPhoneNumber(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: CustomFloatingTextField(
-        width: 348.h,
-        controller: phoneNumberController,
-        labelText: "Phone Number",
-        labelStyle: theme.textTheme.titleMedium!,
-        hintText: "Phone Number",
-        textInputAction: TextInputAction.done,
-        textInputType: TextInputType.phone,
-        alignment: Alignment.bottomLeft,
-        contentPadding: EdgeInsets.symmetric(vertical: 14.v, horizontal: 18.h),
-      ),
-    );
-  }
+  // Widget _buildPhoneNumber(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 8.0),
+  //     child: CustomFloatingTextField(
+  //       width: 348.h,
+  //       controller: phoneNumberController,
+  //       labelText: "Phone Number",
+  //       labelStyle: theme.textTheme.titleMedium!,
+  //       hintText: "Phone Number",
+  //       textInputAction: TextInputAction.done,
+  //       textInputType: TextInputType.phone,
+  //       alignment: Alignment.bottomLeft,
+  //       contentPadding: EdgeInsets.symmetric(vertical: 14.v, horizontal: 18.h),
+  //     ),
+  //   );
+  // }
 
 
   Widget _buildSignUp(BuildContext context) {
@@ -196,6 +216,10 @@ class SignUpScreen extends StatelessWidget {
       height: 49.v,
       text: "Sign up",
       buttonStyle: CustomButtonStyles.fillPrimary,
+      onPressed: () {
+        signup(emailController.text.toString(),passwordController.text.toString(),userNameController.text.toString());
+
+      },
     );
   }
 
@@ -234,4 +258,37 @@ class SignUpScreen extends StatelessWidget {
   onTapTxtAlreadyhavean(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.loginScreen);
   }
+
+  void signup(String email, String password, String username) async {
+    print("Attempting signup with username: $username, email: $email");
+
+    try {
+      Response response = await post(
+        Uri.parse('http://192.168.209.1:8080/auth/register'), //or  192.168.145.1
+        body: {
+          'username': username,
+          'email': email,
+          'password': password,
+        },
+      );
+
+      print("Response status code: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        print("Signup successful");
+      } else {
+        print("Signup failed with status: ${response.statusCode}");
+      }
+    } on SocketException catch (e) {
+      print("SocketException: $e");
+    } on ClientException catch (e) {
+      print("ClientException: $e");
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+
+
 }

@@ -3,11 +3,15 @@ import 'package:ibrahim_s_application1/core/app_export.dart';
 import 'package:ibrahim_s_application1/widgets/custom_checkbox_button.dart';
 import 'package:ibrahim_s_application1/widgets/custom_elevated_button.dart';
 import 'package:ibrahim_s_application1/widgets/custom_floating_text_field.dart';
-import 'package:ibrahim_s_application1/widgets/custom_text_form_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberMe = false;
@@ -55,77 +59,7 @@ class LoginScreen extends StatelessWidget {
                           buttonStyle: CustomButtonStyles.fillPrimary,
                         ),
                         SizedBox(height: 40.v),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 25.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.v),
-                                child: SizedBox(width: 105.h, child: Divider()),
-                              ),
-                              Text(
-                                "or sign up with",
-                                style: CustomTextStyles.bodySmallGray600,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.v),
-                                child: SizedBox(width: 105.h, child: Divider()),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 25.v),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 21.adaptSize,
-                              width: 21.adaptSize,
-                              margin: EdgeInsets.only(bottom: 1.v),
-                              child: Stack(
-                                alignment: Alignment.bottomLeft,
-                                children: [
-                                  CustomImageView(
-                                    imagePath: ImageConstant.imgUser,
-                                    height: 10.adaptSize,
-                                    width: 10.adaptSize,
-                                    alignment: Alignment.bottomRight,
-                                    margin: EdgeInsets.only(bottom: 3.v),
-                                  ),
-                                  CustomImageView(
-                                    imagePath: ImageConstant.imgMobile,
-                                    height: 8.v,
-                                    width: 17.h,
-                                    alignment: Alignment.bottomLeft,
-                                    margin: EdgeInsets.only(left: 1.h),
-                                  ),
-                                  CustomImageView(
-                                    imagePath: ImageConstant.imgVector,
-                                    height: 9.v,
-                                    width: 4.h,
-                                    alignment: Alignment.topLeft,
-                                    margin: EdgeInsets.only(top: 5.v),
-                                  ),
-                                  CustomImageView(
-                                    imagePath: ImageConstant.imgUserRed50001,
-                                    height: 8.v,
-                                    width: 17.h,
-                                    alignment: Alignment.topLeft,
-                                    margin: EdgeInsets.only(left: 1.h),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.h, top: 2.v),
-                              child: Text(
-                                "Google",
-                                style: CustomTextStyles.titleSmall14,
-                              ),
-                            ),
-                          ],
-                        ),
+
                         SizedBox(height: 41.v),
                         GestureDetector(
                           onTap: () {
@@ -138,8 +72,6 @@ class LoginScreen extends StatelessWidget {
                                   text: "Don’t have an account?",
                                   style: CustomTextStyles.bodySmall99ffffff,
                                 ),
-
-
                               ],
                             ),
                             textAlign: TextAlign.left,
@@ -164,14 +96,36 @@ class LoginScreen extends StatelessWidget {
     String? labelText,
     bool obscureText = false,
   }) {
-    return CustomFloatingTextField(
-      controller: controller,
-      labelText: labelText ?? hintText,
-      labelStyle: theme.textTheme.titleMedium!,
-      hintText: hintText,
-      textInputAction: TextInputAction.done,
-      textInputType: TextInputType.visiblePassword,
-      obscureText: obscureText,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            CustomFloatingTextField(
+              controller: controller,
+              labelText: labelText,
+              hintText: hintText,
+              obscureText: obscureText,
+              contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 18.0),
+              labelStyle: theme.textTheme.titleMedium!.copyWith(
+                color: theme.primaryColor,
+              ),
+            ),
+            Positioned(
+              left: 18.0,
+              top: controller.text.isEmpty ? 16.0 : 8.0,
+              child: Text(
+                labelText ?? hintText,
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+      ],
     );
   }
 
@@ -201,25 +155,55 @@ class LoginScreen extends StatelessWidget {
   Widget _buildLoginRow(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 6.h, right: 3.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          CustomCheckboxButton(
-            text: "Remember me",
-            value: rememberMe,
-            padding: EdgeInsets.symmetric(vertical: 1.v),
-            onChange: (value) {
-              rememberMe = value;
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    rememberMe = !rememberMe;
+                  });
+                },
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: CustomCheckboxButton(
+                        value: rememberMe,
+                        padding: EdgeInsets.symmetric(vertical: 1.v),
+                        onChange: (value) {
+                          setState(() {
+                            rememberMe = value;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 5.0),
+                    Text(
+                      "Remember me",
+                      style: CustomTextStyles.bodyMediumPrimary.copyWith(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          GestureDetector(
-            onTap: () {
-              onTapTxtForgotPassword(context);
-            },
-            child: Text(
-              "Forgot password?",
-              style: CustomTextStyles.bodyMediumPrimary.copyWith(
-                decoration: TextDecoration.underline,
+          SizedBox(height: 10.v), // Adjust the spacing as needed
+          Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: () {
+                onTapTxtForgotPassword(context);
+              },
+              child: Text(
+                "Forgot password?",
+                style: CustomTextStyles.bodyMediumPrimary.copyWith(
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
@@ -228,11 +212,13 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  onTapTxtForgotPassword(BuildContext context) {
+
+
+  void onTapTxtForgotPassword(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.forgotPasswordScreen);
   }
 
-  onTapTxtDonthaveanaccount(BuildContext context) {
+  void onTapTxtDonthaveanaccount(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
   }
 }
