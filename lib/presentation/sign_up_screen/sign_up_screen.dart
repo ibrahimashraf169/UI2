@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -259,33 +260,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.pushNamed(context, AppRoutes.loginScreen);
   }
 
-  void signup(String email, String password, String username) async {
-    print("Attempting signup with username: $username, email: $email");
+  Future<void> signup(String email, String password, String username) async {
+    print("Attempting signup with username: $username, email: $email, password: $password");
 
     try {
-      Response response = await post(
-        Uri.parse('http://192.168.209.1:8080/auth/register'), //or  192.168.145.1
-        body: {
+      final dio = Dio();
+      final response = await dio.post(
+        'http://192.168.1.8:8080/auth/register',
+        data: {
           'username': username,
           'email': email,
           'password': password,
+          'role': 'USER',
         },
       );
 
       print("Response status code: ${response.statusCode}");
-      print("Response body: ${response.body}");
+      print("Response body: ${response.data}");
 
       if (response.statusCode == 200) {
         print("Signup successful");
       } else {
         print("Signup failed with status: ${response.statusCode}");
+        // Handle failure, e.g., show an error message to the user
+      }
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout) {
+        print("Timeout error: $e");
+        // Handle timeout error
+      } else if (e.type == DioErrorType.response) {
+        print("Response error: ${e.response?.statusCode}, ${e.response?.data}");
+        // Handle non-200 response
+      } else {
+        print("DioError: $e");
+        // Handle other Dio errors
       }
     } on SocketException catch (e) {
       print("SocketException: $e");
-    } on ClientException catch (e) {
-      print("ClientException: $e");
+      // Handle socket exceptions
     } catch (e) {
       print("Error: $e");
+      // Handle other exceptions
     }
   }
 
