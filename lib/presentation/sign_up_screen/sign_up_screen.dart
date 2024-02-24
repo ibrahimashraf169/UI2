@@ -264,14 +264,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
     print("Attempting signup with username: $username, email: $email, password: $password");
 
     try {
-      final dio = Dio();
+      final dio = Dio(BaseOptions(
+        connectTimeout: 10000, // 10 seconds
+        receiveTimeout: 10000, // 10 seconds
+      ));
+
       final response = await dio.post(
-        'http://192.168.1.8:8080/auth/register',
+        'http://192.168.1.6:8080/auth/register',
         data: {
           'username': username,
           'email': email,
           'password': password,
-          'role': 'USER',
+          'role': 'ADMIN',
         },
       );
 
@@ -280,29 +284,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (response.statusCode == 200) {
         print("Signup successful");
+        // Navigate to the login page when signup is successful
+        Navigator.pushNamed(context, AppRoutes.loginScreen);
       } else {
         print("Signup failed with status: ${response.statusCode}");
         // Handle failure, e.g., show an error message to the user
+        // You can customize this part based on your application requirements
+        showErrorMessage('Signup failed. Please try again.');
       }
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout || e.type == DioErrorType.receiveTimeout) {
         print("Timeout error: $e");
         // Handle timeout error
+        showErrorMessage('Connection timeout. Please check your network.');
       } else if (e.type == DioErrorType.response) {
         print("Response error: ${e.response?.statusCode}, ${e.response?.data}");
         // Handle non-200 response
+        showErrorMessage('Server error. Please try again later.');
       } else {
         print("DioError: $e");
         // Handle other Dio errors
+        showErrorMessage('An error occurred. Please try again.');
       }
     } on SocketException catch (e) {
       print("SocketException: $e");
       // Handle socket exceptions
+      showErrorMessage('Socket error. Please check your network.');
     } catch (e) {
       print("Error: $e");
       // Handle other exceptions
+      showErrorMessage('An unexpected error occurred. Please try again.');
     }
   }
+
+  void showErrorMessage(String message) {
+    // You can implement your own logic to display error messages to the user,
+    // for example, using a SnackBar or AlertDialog.
+    // Here's an example using a SnackBar:
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
 
 
 
