@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
+
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:ibrahim_s_application1/core/app_export.dart';
 import 'package:ibrahim_s_application1/widgets/custom_checkbox_button.dart';
 import 'package:ibrahim_s_application1/widgets/custom_elevated_button.dart';
@@ -29,7 +34,26 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildWelcomeBackRow(context),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 118.v, bottom: 25.v),
+                          child: Text(
+                            "Welcome back!",
+                            style: theme.textTheme.titleLarge,
+                          ),
+                        ),
+                        // CustomImageView(
+                        //   imagePath: ImageConstant.imgGroup36691,
+                        //   height: 164.v,
+                        //   width: 182.h,
+                        // ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 62.v),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 30.h, vertical: 74.v),
@@ -51,15 +75,73 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: true,
                         ),
                         SizedBox(height: 17.v),
-                        _buildLoginRow(context),
+                        Padding(
+                          padding: EdgeInsets.only(left: 6.h, right: 3.h),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        rememberMe = !rememberMe;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: CustomCheckboxButton(
+                                            value: rememberMe,
+                                            padding: EdgeInsets.symmetric(vertical: 1.v),
+                                            onChange: (value) {
+                                              setState(() {
+                                                rememberMe = value;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 5.0),
+                                        Text(
+                                          "Remember me",
+                                          style: CustomTextStyles.bodyMediumPrimary.copyWith(
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10.v),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    onTapTxtForgotPassword(context);
+                                  },
+                                  child: Text(
+                                    "Forgot password?",
+                                    style: CustomTextStyles.bodyMediumPrimary.copyWith(
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: 63.v),
                         CustomElevatedButton(
                           height: 49.v,
                           text: "Log in",
                           buttonStyle: CustomButtonStyles.fillPrimary,
+                          onPressed: () {
+                            _handleLogin();
+                          },
                         ),
                         SizedBox(height: 40.v),
-
                         SizedBox(height: 41.v),
                         GestureDetector(
                           onTap: () {
@@ -129,96 +211,40 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildWelcomeBackRow(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 20.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 118.v, bottom: 25.v),
-            child: Text(
-              "Welcome back!",
-              style: theme.textTheme.titleLarge,
-            ),
-          ),
-          CustomImageView(
-            imagePath: ImageConstant.imgGroup36691,
-            height: 164.v,
-            width: 182.h,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoginRow(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 6.h, right: 3.h),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    rememberMe = !rememberMe;
-                  });
-                },
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8.0),
-                      child: CustomCheckboxButton(
-                        value: rememberMe,
-                        padding: EdgeInsets.symmetric(vertical: 1.v),
-                        onChange: (value) {
-                          setState(() {
-                            rememberMe = value;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 5.0),
-                    Text(
-                      "Remember me",
-                      style: CustomTextStyles.bodyMediumPrimary.copyWith(
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.v), // Adjust the spacing as needed
-          Align(
-            alignment: Alignment.centerLeft,
-            child: GestureDetector(
-              onTap: () {
-                onTapTxtForgotPassword(context);
-              },
-              child: Text(
-                "Forgot password?",
-                style: CustomTextStyles.bodyMediumPrimary.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-
   void onTapTxtForgotPassword(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.forgotPasswordScreen);
   }
 
   void onTapTxtDonthaveanaccount(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
+  }
+
+  void _handleLogin() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      String email = emailController.text;
+      String password = passwordController.text;
+
+      final apiUrl = 'https://example.com/login'; // Replace with your actual login API endpoint
+
+      try {
+        final response = await Dio().post(
+          apiUrl,
+          data: {'email': email, 'password': password},
+        );
+
+        if (response.statusCode == 200) {
+          // Successful login
+          final responseData = response.data;
+          print('Login successful: $responseData');
+        } else {
+          // Handle errors or unsuccessful login
+          print('Login failed. Status code: ${response.statusCode}');
+          print('Error message: ${response.data}');
+        }
+      } catch (error) {
+        // Handle network errors
+        print('Network error: $error');
+      }
+    }
   }
 }
