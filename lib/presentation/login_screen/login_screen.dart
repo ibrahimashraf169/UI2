@@ -221,30 +221,62 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
-      String email = emailController.text;
+      String username = emailController.text;
       String password = passwordController.text;
 
-      final apiUrl = 'https://example.com/login'; // Replace with your actual login API endpoint
+      final apiUrl = 'http://192.168.1.5:8080/auth/login';
 
       try {
         final response = await Dio().post(
           apiUrl,
-          data: {'email': email, 'password': password},
+          data: {'username': username, 'password': password},
         );
 
         if (response.statusCode == 200) {
           // Successful login
           final responseData = response.data;
           print('Login successful: $responseData');
+
+          // Navigate to the app_navigation_screen
+          Navigator.pushNamed(context, AppRoutes.appNavigationScreen);
         } else {
           // Handle errors or unsuccessful login
           print('Login failed. Status code: ${response.statusCode}');
           print('Error message: ${response.data}');
+
+          // Show error message
+          showErrorDialog('Login failed. ${response.data}');
         }
       } catch (error) {
         // Handle network errors
         print('Network error: $error');
+
+        // Show error message
+        showErrorDialog('Network error. Please check your connection.');
       }
     }
   }
+
+  void showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
 }
