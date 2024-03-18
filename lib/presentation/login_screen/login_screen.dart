@@ -224,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String username = emailController.text;
       String password = passwordController.text;
 
-      final apiUrl = 'http://192.168.1.5:8080/auth/login';
+      final apiUrl = 'http://192.168.1.8:8080/auth/login';
 
       try {
         final response = await Dio().post(

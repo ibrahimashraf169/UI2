@@ -85,6 +85,13 @@ class AppNavigationScreen extends StatelessWidget {
                           onTapScreenTitle: () => onTapScreenTitle(
                               context, AppRoutes.paymentMethodScreen),
                         ),
+                        _buildScreenTitle(
+                          context,
+                          screenTitle: "Mainview",
+                          onTapScreenTitle: () => onTapScreenTitle(
+                              context, AppRoutes.mainviewScreen),
+
+                        ),
                       ],
                     ),
                   ),

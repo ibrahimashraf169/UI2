@@ -1,8 +1,13 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:ibrahim_s_application1/presentation/sign_up_screen/sign_up_screen.dart';
+import 'package:ibrahim_s_application1/presentation/purchase_cars_container_screen/MainView.dart';
+
+
 import 'package:ibrahim_s_application1/presentation/login_screen/login_screen.dart';
 import 'package:ibrahim_s_application1/presentation/forgot_password_screen/forgot_password_screen.dart';
-import 'package:ibrahim_s_application1/presentation/purchase_cars_container_screen/purchase_cars_container_screen.dart';
+import 'package:ibrahim_s_application1/presentation/purchase_cars_container_screen/MainView.dart';
 import 'package:ibrahim_s_application1/presentation/car_details_screen/car_details_screen.dart';
 import 'package:ibrahim_s_application1/presentation/spare_parts_screen/spare_parts_screen.dart';
 import 'package:ibrahim_s_application1/presentation/maintenance_services_screen/maintenance_services_screen.dart';
@@ -10,6 +15,8 @@ import 'package:ibrahim_s_application1/presentation/checkout_one_screen/checkout
 import 'package:ibrahim_s_application1/presentation/checkout_screen/checkout_screen.dart';
 import 'package:ibrahim_s_application1/presentation/payment_method_screen/payment_method_screen.dart';
 import 'package:ibrahim_s_application1/presentation/app_navigation_screen/app_navigation_screen.dart';
+
+import '../presentation/purchase_cars_container_screen/PurchaseCarsContainerScreen.dart';
 
 class AppRoutes {
   static const String signUpScreen = '/sign_up_screen';
@@ -29,7 +36,7 @@ class AppRoutes {
 
   static const String maintenanceServicesScreen =
       '/maintenance_services_screen';
-
+    static const String mainviewScreen='/mainview';
   static const String checkoutOneScreen = '/checkout_one_screen';
 
   static const String checkoutScreen = '/checkout_screen';
@@ -49,6 +56,7 @@ class AppRoutes {
     checkoutOneScreen: (context) => CheckoutOneScreen(),
     checkoutScreen: (context) => CheckoutScreen(),
     paymentMethodScreen: (context) => PaymentMethodScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen()
+    appNavigationScreen: (context) => AppNavigationScreen(),
+    mainviewScreen:(context)=> MainView()
   };
 }

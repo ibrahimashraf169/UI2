@@ -270,7 +270,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ));
 
       final response = await dio.post(
-        'http://192.168.1.5:8080/auth/register',
+        'http://192.168.1.8:8080/auth/register',
         data: {
           'username': username,
           'email': email,
