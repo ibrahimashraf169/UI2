@@ -13,9 +13,9 @@ class SparePartsScreen extends StatelessWidget {
           key: key,
         );
 
-  TextEditingController searchController = TextEditingController();
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +33,7 @@ class SparePartsScreen extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: 5.v),
                     child: Column(
                       children: [
-                        CustomSearchView(
-                          width: 272.h,
-                          controller: searchController,
-                          hintText: "Find a Project",
-                        ),
+                        _buildSearchView(),
                         SizedBox(height: 25.v),
                         _buildFrameRow(context),
                         SizedBox(height: 26.v),
@@ -95,12 +91,29 @@ class SparePartsScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomBar(context),
+        bottomNavigationBar: CustomBottomBar(
+          onChanged: (BottomBarEnum type) {
+            _navigateTo(context, type);
+          },
+        ),
       ),
     );
   }
 
-  /// Section Widget
+  void _navigateTo(BuildContext context, BottomBarEnum type) {
+    switch (type) {
+      case BottomBarEnum.Home:
+      // Navigate to the home page.
+        Navigator.pushNamed(context, AppRoutes.purchaseCarsPage);
+        break;
+      case BottomBarEnum.Contactus:
+      case BottomBarEnum.Profile:
+      case BottomBarEnum.Settings:
+      // Implement navigation to other pages as needed.
+        break;
+    }
+  }
+
   Widget _buildSparePartsButton(BuildContext context) {
     return CustomElevatedButton(
       height: 36.v,
@@ -108,49 +121,46 @@ class SparePartsScreen extends StatelessWidget {
       text: "Spare Parts",
       buttonStyle: CustomButtonStyles.fillPrimaryTL18,
       buttonTextStyle: CustomTextStyles.labelLargeGray200,
+      onPressed: () {
+        Navigator.pushNamed(context, AppRoutes.sparePartsScreen);
+      },
     );
   }
 
-  /// Section Widget
   Widget _buildMaintenanceServicesButton(BuildContext context) {
     return CustomOutlinedButton(
       width: 187.h,
       text: "Maintenance Services",
       buttonStyle: CustomButtonStyles.outlinePrimary,
+      onPressed: () {
+        Navigator.pushNamed(context, AppRoutes.maintenanceServicesScreen);
+      },
     );
   }
 
-  /// Section Widget
+  Widget _buildSellCarsButton(BuildContext context) {
+    return CustomOutlinedButton(
+      width: 80.h,
+      text: "Sell Cars",
+      buttonStyle: CustomButtonStyles.outlinePrimary,
+      onPressed: () {
+        // Navigate to the purchase cars container screen.
+        Navigator.pushNamed(context, AppRoutes.purchaseCarsContainerScreen);
+      },
+    );
+  }
+
   Widget _buildFrameRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildSparePartsButton(context),
-              _buildMaintenanceServicesButton(context),
-            ],
-          ),
-        ),
-        Container(
-          width: 80.h,
-          margin: EdgeInsets.only(left: 12.h),
-          padding: EdgeInsets.symmetric(vertical: 8.v),
-          decoration: AppDecoration.outlinePrimary1.copyWith(
-            borderRadius: BorderRadiusStyle.circleBorder18,
-          ),
-          child: Text(
-            "Sell Cars",
-            style: theme.textTheme.bodySmall,
-          ),
-        ),
+        _buildSparePartsButton(context),
+        _buildMaintenanceServicesButton(context),
+        _buildSellCarsButton(context),
       ],
     );
   }
 
-  /// Section Widget
   Widget _buildProductCard(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14.h),
@@ -158,9 +168,9 @@ class SparePartsScreen extends StatelessWidget {
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         separatorBuilder: (
-          context,
-          index,
-        ) {
+            context,
+            index,
+            ) {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0.v),
             child: SizedBox(
@@ -181,39 +191,11 @@ class SparePartsScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
-      },
+  Widget _buildSearchView() {
+    return CustomSearchView(
+      width: 272.h,
+      hintText: "Find a Project",
+      autofocus: false,
     );
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Home:
-        return AppRoutes.purchaseCarsPage;
-      case BottomBarEnum.Contactus:
-        return "/";
-      case BottomBarEnum.Profile:
-        return "/";
-      case BottomBarEnum.Settings:
-        return "/";
-      default:
-        return "/";
-    }
-  }
-
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.purchaseCarsPage:
-        return PurchaseCarsPage();
-      default:
-        return DefaultWidget();
-    }
   }
 }

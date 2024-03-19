@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ibrahim_s_application1/core/app_export.dart';
+import 'package:ibrahim_s_application1/presentation/purchase_cars_page/purchase_cars_page.dart';
 import 'package:ibrahim_s_application1/widgets/custom_bottom_bar.dart';
 import 'package:ibrahim_s_application1/widgets/custom_elevated_button.dart';
 import 'package:ibrahim_s_application1/widgets/custom_outlined_button.dart';
@@ -12,6 +13,8 @@ class PurchaseCarsPage extends StatelessWidget {
   PurchaseCarsPage({Key? key}) : super(key: key);
 
   TextEditingController searchController = TextEditingController();
+
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class PurchaseCarsPage extends StatelessWidget {
                           hintText: "Find a Project",
                         ),
                         SizedBox(height: 25.v),
-                        _buildFrameRow(context),
+                        _buildButtonRow(context),
                         SizedBox(height: 26.v),
                         Align(
                           alignment: Alignment.centerLeft,
@@ -91,12 +94,12 @@ class PurchaseCarsPage extends StatelessWidget {
             ],
           ),
         ),
-        // Remove the bottom navigation bar from here
+        bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
 
-  Widget _buildFrameRow(BuildContext context) {
+  Widget _buildButtonRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -110,18 +113,13 @@ class PurchaseCarsPage extends StatelessWidget {
     );
   }
 
-
-
-
-
-
   Widget _buildSparePartsButton(BuildContext context) {
     return CustomOutlinedButton(
       width: 95.h,
       text: "Spare Parts",
       buttonStyle: CustomButtonStyles.outlinePrimary,
       onPressed: () {
-        Navigator.pushNamed(context, AppRoutes.mainviewScreen);
+        Navigator.pushNamed(context, AppRoutes.sparePartsScreen);
       },
     );
   }
@@ -178,5 +176,27 @@ class PurchaseCarsPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
+    return CustomBottomBar(
+      onChanged: (BottomBarEnum type) {
+        _navigateTo(context, type);
+      },
+    );
+  }
+
+  void _navigateTo(BuildContext context, BottomBarEnum type) {
+    switch (type) {
+      case BottomBarEnum.Home:
+      // Navigate to the home page.
+        Navigator.pushNamed(context, AppRoutes.purchaseCarsPage);
+        break;
+      case BottomBarEnum.Contactus:
+      case BottomBarEnum.Profile:
+      case BottomBarEnum.Settings:
+      // Implement navigation to other pages as needed.
+        break;
+    }
   }
 }
